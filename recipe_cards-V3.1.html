@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Worksheets — Alpine Nut Butter Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber: #C8860A;
+    --amber-light: #E8A020;
+    --amber-dim: #8a5c07;
+    --bg: #1a1a18;
+    --card: #242420;
+    --card2: #2c2c28;
+    --border: #383830;
+    --text: #e8e4da;
+    --muted: #8a8678;
+    --input-bg: #1e1e1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Header */
+  .site-header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--amber-light);
+    letter-spacing: 0.02em;
+  }
+  .site-header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    background: var(--bg);
+    padding: 14px 28px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    padding: 8px 18px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--muted);
+    transition: all 0.15s;
+    position: relative;
+    bottom: -1px;
+  }
+  .tab:hover { color: var(--text); background: var(--card2); }
+  .tab.active {
+    background: var(--card2);
+    color: var(--amber-light);
+    border-color: var(--border);
+    border-bottom-color: var(--card2);
+    font-weight: 500;
+  }
+  .tab-add {
+    font-size: 0.82rem;
+    padding: 8px 14px;
+    border-radius: 8px 8px 0 0;
+    border: 1px dashed var(--border);
+    border-bottom: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+    position: relative;
+    bottom: -1px;
+  }
+  .tab-add:hover { color: var(--amber-light); border-color: var(--amber-dim); }
+
+  /* Main content */
+  .main {
+    padding: 28px 32px;
+    max-width: 960px;
+  }
+
+  /* Recipe card */
+  .recipe-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .card-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+  .jar-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* Batch multiplier */
+  .batch-row {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+  }
+  .batch-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+    min-width: 80px;
+  }
+  .batch-slider-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .batch-slider-wrap input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+  .batch-slider-wrap input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: var(--amber);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .batch-slider-wrap input[type=range]::-webkit-slider-thumb:hover { background: var(--amber-light); }
+  .batch-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    color: var(--text);
+    min-width: 28px;
+    text-align: center;
+  }
+  .batch-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    min-width: 110px;
+    text-align: right;
+  }
+
+  /* Ingredients */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 16px 24px 10px;
+  }
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0 24px 16px;
+    gap: 10px 14px;
+  }
+  .ingredient-cell {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px 10px;
+  }
+  .ingredient-cell label {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .ingredient-cell input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    color: var(--text);
+    width: 100%;
+  }
+  .ingredient-cell input::placeholder { color: var(--muted); opacity: 0.5; }
+
+  /* Steps */
+  .steps-list {
+    padding: 0 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .step-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .step-num {
+    min-width: 26px; height: 26px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
+  .step-input {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    min-height: 56px;
+    resize: vertical;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .step-input:focus { border-color: var(--amber-dim); }
+
+  .add-step-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 24px 16px;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+  /* Notes */
+  .notes-area {
+    margin: 0 24px 20px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text);
+    width: calc(100% - 48px);
+    min-height: 70px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .notes-area:focus { border-color: var(--amber-dim); }
+
+  /* Card footer */
+  .card-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn-reset {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-reset:hover { color: var(--text); border-color: var(--muted); }
+  .btn-print {
+    flex: 1;
+    background: var(--amber);
+    border: none;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--amber-light); }
+
+  /* Batch Log */
+  .batch-log-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px 10px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .batch-log-header .section-label {
+    padding: 0;
+    border: none;
+    margin: 0;
+  }
+  .btn-add-batch {
+    background: transparent;
+    border: 1px solid var(--amber-dim);
+    color: var(--amber);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .btn-add-batch:hover { background: var(--amber-dim); color: #fff; border-color: var(--amber-dim); }
+
+  .batch-log-list {
+    padding: 0 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .batch-log-empty {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    padding: 10px 0 4px;
+    opacity: 0.6;
+  }
+
+  .batch-entry {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .batch-entry:hover { border-color: var(--amber-dim); }
+
+  .batch-entry-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .batch-entry-header:hover { background: rgba(200,134,10,0.05); }
+
+  .batch-entry-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 0.06em;
+    min-width: 32px;
+  }
+  .batch-entry-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+    flex: 1;
+  }
+  .batch-entry-size {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+  .batch-entry-rating {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--amber);
+    min-width: 60px;
+    text-align: right;
+  }
+  .batch-entry-chevron {
+    font-size: 0.65rem;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .batch-entry.expanded .batch-entry-chevron { transform: rotate(180deg); }
+
+  .batch-entry-body {
+    display: none;
+    padding: 0 14px 14px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+    flex-direction: column;
+  }
+  .batch-entry.expanded .batch-entry-body { display: flex; }
+
+  .batch-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding-top: 12px;
+  }
+  .batch-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .batch-field label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .batch-field input, .batch-field select {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .batch-field input:focus, .batch-field select:focus { border-color: var(--amber-dim); }
+  .batch-field select option { background: var(--card2); }
+
+  .batch-field-full {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .batch-field-full label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .batch-field-full textarea {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    min-height: 54px;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .batch-field-full textarea:focus { border-color: var(--amber-dim); }
+
+  .batch-entry-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 4px;
+  }
+  .btn-delete-entry {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-delete-entry:hover { color: #e05555; border-color: #e05555; }
+
+  /* Star rating widget */
+  .star-input { display: flex; gap: 3px; align-items: center; }
+  .star-input span {
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--border);
+    transition: color 0.1s;
+    line-height: 1;
+  }
+  .star-input span.lit { color: var(--amber); }
+  .star-input span:hover, .star-input span:hover ~ span { color: var(--border); }
+  .star-input:hover span { color: var(--amber-light); }
+
+  /* Setup modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    max-width: 560px;
+    width: calc(100% - 40px);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--amber-light);
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .setup-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .setup-step-num {
+    min-width: 26px; height: 26px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .setup-step-text {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .setup-step-text a {
+    color: var(--amber-light);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .setup-step-text code {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+  .modal-input-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+  }
+  .modal-input-row input {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    outline: none;
+  }
+  .modal-input-row input:focus { border-color: var(--amber-dim); }
+  .btn-connect {
+    background: var(--amber);
+    border: none;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .btn-connect:hover { background: var(--amber-light); }
+  .modal-skip {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .modal-skip:hover { color: var(--text); }
+  .sync-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .sync-status.visible { opacity: 1; }
+  .sync-status.ok { color: #6dbf8a; }
+  .sync-status.err { color: #e05555; }
+  .sync-status.syncing { color: var(--muted); }
+  .btn-gdrive-setup {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .btn-gdrive-setup:hover { color: var(--amber-light); border-color: var(--amber-dim); }
+
+  @media print {
+    .tab-bar, .site-header, .card-footer, .btn-ghost, .btn-add-batch, .batch-entry-actions { display: none !important; }
+    body { background: white; color: black; }
+    .recipe-card { border: 1px solid #ccc; }
+    .batch-entry-body { display: flex !important; }
+    .batch-entry-chevron { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Alpine Nut Butter Co.</h1>
+  <span>Recipe Worksheets</span>
+</header>
+
+<div class="tab-bar" id="tabBar">
+  <!-- tabs injected by JS -->
+  <button class="tab-add" onclick="addRecipe()">+ new recipe</button>
+</div>
+
+<div class="main">
+  <div class="recipe-card" id="recipeCard">
+    <div class="card-header">
+      <div>
+        <div class="card-title" id="cardTitle">Honey peanut</div>
+        <div class="card-sub">Alpine Nut Butter Co. — small-batch recipe card</div>
+      </div>
+      <div class="jar-badge">12 oz<br>jar</div>
+    </div>
+
+    <div class="batch-row">
+      <div class="batch-label">Batch<br>multiplier</div>
+      <div class="batch-slider-wrap">
+        <input type="range" id="batchSlider" min="1" max="10" value="1" oninput="updateBatch(this.value)">
+      </div>
+      <div class="batch-val" id="batchVal">1</div>
+      <div class="batch-note" id="batchNote">single batch (~12 oz)</div>
+    </div>
+
+    <div class="section-label">Ingredients</div>
+    <div class="ingredients-grid" id="ingredientsGrid"></div>
+
+    <div class="section-label">Process Steps</div>
+    <div class="steps-list" id="stepsList"></div>
+    <div class="add-step-row">
+      <button class="btn-ghost" onclick="addStep()">+ add step</button>
+    </div>
+
+    <div class="section-label">Batch Notes</div>
+    <textarea class="notes-area" id="notesArea" placeholder="Add batch notes..."></textarea>
+
+    <div class="batch-log-header">
+      <div class="section-label" style="padding:0;border:none;margin:0;">Batch Log</div>
+      <button class="btn-add-batch" onclick="addBatchEntry()">+ log batch</button>
+    </div>
+    <div class="batch-log-list" id="batchLogList"></div>
+
+    <div class="card-footer">
+      <button class="btn-reset" onclick="resetToDefaults()">Reset to defaults</button>
+      <button class="btn-ghost" onclick="exportData()" title="Save all your data to a file you can load on any device">⬇ Export data</button>
+      <label class="btn-ghost" style="cursor:pointer;" title="Load data from a previously exported file">
+        ⬆ Import data
+        <input type="file" accept=".json" onchange="importData(event)" style="display:none">
+      </label>
+      <button class="btn-print" onclick="window.print()">Print / save card</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const defaultRecipes = [
+  {
+    name: "Honey peanut",
+    ingredients: [
+      { label: "Raw peanuts", amount: "400 g" },
+      { label: "Raw honey (pre-coat)", amount: "20 g" },
+      { label: "Sea salt", amount: "4 g" },
+      { label: "Vanilla bean paste", amount: "1 tsp" },
+      { label: "Coconut oil (if needed)", amount: "5 g" },
+      { label: "", amount: "" },
+    ],
+    steps: [
+      "OVEN: Conventional 350°F / Convection 325°F. Line a baking sheet with parchment paper — not foil. Parchment is essential so the honey coating releases cleanly after roasting.",
+      "PRE-COAT: In a bowl, toss raw peanuts with honey and half the salt until every nut is coated. It will look sticky and clumpy — that's exactly right. Spread in a single even layer on the parchment. No overlapping.",
+      "ROAST: Conventional 13–15 min / Convection 10–12 min, stirring once at the halfway point. You're looking for a deep amber-gold color and a rich caramelized smell — not just 'toasty', it should smell almost toffee-like. Don't pull them early; that last 2 min is where the flavor happens.",
+      "COOL: Remove from oven and let cool COMPLETELY on the pan — 15–20 min. As they cool, the honey coating firms up and the nuts lift cleanly off the parchment. Do not skip this step; warm nuts will steam in the melanger and cause problems. Scrape up any caramelized crumbles from the parchment and keep them — they are pure flavor.",
+      "MELANGER LOAD: Add cooled peanuts and all crumbles to the melanger drum. Start the machine and let it run for 30–45 min until a rough, coarse butter forms and the mixture becomes fluid enough to circulate under the stones on its own. Scrape down the sides and under the drum edge every 10–15 min during this phase.",
+      "ADD FLAVOR: Once the butter is fluid and circulating freely, add vanilla bean paste and remaining salt. Let the melanger run for a further 1–3 hours depending on your desired smoothness. The longer it runs, the silkier the result. Taste at the 1-hour mark and adjust salt if needed.",
+      "JAR: Pour or scoop warm butter into jars immediately. It will be very fluid from the melanger heat — this is normal. It will thicken to a spreadable consistency as it cools. Seal and store.",
+    ],
+    notes: "PRE-COAT METHOD: Honey is tossed onto raw peanuts before roasting — this caramelizes it into the nuts for deeper, more integrated sweetness than adding it after blending. Parchment paper is non-negotiable for this method. Cool completely before the melanger or the steam will affect texture. Natural separation is normal — store upside down to minimize. Shelf life 3 weeks at room temp, 3 months refrigerated.",
+    batches: [],
+  },
+  {
+    name: "Coconut peanut",
+    ingredients: [
+      { label: "Raw peanuts", amount: "400 g" },
+      { label: "Toasted coconut chips", amount: "60 g" },
+      { label: "Coconut sugar", amount: "1 tbsp" },
+      { label: "Coconut oil", amount: "8 g" },
+      { label: "Sea salt", amount: "3 g" },
+      { label: "Vanilla extract", amount: "0.5 tsp" },
+    ],
+    steps: [
+      "OVEN: Conventional 350°F / Convection 325°F. Line a baking sheet with parchment paper.",
+      "ROAST PEANUTS: Spread raw peanuts in a single even layer on the parchment. Roast: Conventional 13–15 min / Convection 10–12 min, stirring once at the halfway point. You want deep golden, fragrant peanuts. Remove and let cool COMPLETELY on the pan — 15–20 min minimum. Do not rush; the melanger needs cool, dry nuts.",
+      "TOAST COCONUT CHIPS: While peanuts cool, toast coconut chips in a dry skillet over medium-low heat, stirring constantly, for 2–3 min until golden and fragrant. Watch them every second — coconut chips go from golden to burnt extremely fast. Tip onto a plate to cool. Do not leave them in the hot pan or they will keep cooking.",
+      "MELANGER LOAD — COCONUT FIRST: Add the cooled toasted coconut chips to the melanger drum alone. Run for 20–30 min until they break down into a smooth coconut paste. This step builds your flavor base and ensures the coconut is fully integrated rather than gritty.",
+      "ADD PEANUTS: Add the cooled roasted peanuts to the melanger drum with the coconut paste. Run for 30–45 min until a rough combined butter forms and the mixture circulates freely under the stones. Scrape sides and under the drum edge every 10–15 min.",
+      "ADD FLAVOR: Once the butter is fluid and circulating freely, add coconut sugar, salt, vanilla extract, and coconut oil. Run for a further 1–2 hours to your desired smoothness. Taste at the 1-hour mark — the coconut flavor should be pronounced and tropical. Adjust salt if needed.",
+      "JAR: Pour warm butter into jars immediately. It will be fluid from the melanger heat and will firm to a spreadable texture as it cools. Seal and store.",
+    ],
+    notes: "KEY UPGRADE: Uses toasted coconut chips instead of coconut cream — chips give a far more intense, true coconut flavor without adding moisture that can affect texture. Coconut chips are blended in the melanger first to build a flavor base before the peanuts are added. Refrigerate for best texture. Shelf life 2 months refrigerated.",
+    batches: [],
+  },
+  {
+    name: "Cinnamon vanilla almond",
+    ingredients: [
+      { label: "Raw almonds", amount: "340 g" },
+      { label: "Raw pecans", amount: "60 g" },
+      { label: "Maple syrup (pre-coat)", amount: "20 g" },
+      { label: "Cinnamon (pre-coat)", amount: "2 tsp" },
+      { label: "Vanilla extract (pre-coat)", amount: "1.5 tsp" },
+      { label: "Sea salt", amount: "2 g" },
+    ],
+    steps: [
+      "OVEN: Conventional 325°F / Convection 300°F. Line a baking sheet with parchment paper. Note: almonds roast at a lower temp than peanuts — they are more delicate and burn easily.",
+      "PRE-COAT: In a bowl, combine almonds and pecans. Add maple syrup, cinnamon, vanilla extract, and salt. Toss until every nut is evenly coated — use your hands or a spatula and take your time, making sure the spices are distributed all the way through. Spread in a single even layer on the parchment.",
+      "ROAST: Conventional 15–18 min / Convection 12–14 min, stirring once at the halfway mark. The nuts should smell deeply spiced and nutty — warm cinnamon and caramelized maple. They will look darker than plain roasted almonds because of the coating; that's normal. Pull when golden-brown, not dark brown.",
+      "COOL: Remove from oven and let cool COMPLETELY on the pan — 15–20 min. The coating firms up as they cool and the nuts will release cleanly from the parchment. Scrape all caramelized spice crumbles off the parchment and keep every bit — this is concentrated flavor.",
+      "MELANGER LOAD: Add all cooled nuts and crumbles to the melanger drum. Run for 30–45 min until a rough almond-pecan butter forms and the mixture becomes fluid enough to circulate freely under the stones. Almonds take longer to break down than peanuts or cashews — be patient and scrape sides every 10–15 min.",
+      "REFINE: Once the butter is fluid and circulating, let the melanger run for a further 1.5–3 hours. The longer you run it, the silkier and more 'drippy' the result. Taste at the 1-hour mark — you should get a clear hit of warm cinnamon, vanilla, and caramelized maple. Adjust salt to taste.",
+      "JAR: Pour warm butter into jars immediately. Almond butter thickens significantly as it cools — more than peanut or cashew butter. Seal and store.",
+    ],
+    notes: "PRE-COAT METHOD: All spices and maple syrup are tossed on the nuts before roasting — this caramelizes them into the nut, creating layered flavor that's baked in rather than stirred in. The addition of pecans (about 15% of the total) adds natural richness and fat that makes the butter noticeably creamier. Almond butter thickens when refrigerated — let sit at room temp 10 min before serving. Shelf life 1 month room temp, 4 months refrigerated.",
+    batches: [],
+  },
+  {
+    name: "Maple cashew",
+    ingredients: [
+      { label: "Raw cashews", amount: "400 g" },
+      { label: "Maple syrup (pre-coat)", amount: "35 g" },
+      { label: "Sea salt", amount: "2 g" },
+      { label: "Vanilla extract", amount: "1 tsp" },
+      { label: "Cinnamon", amount: "0.25 tsp" },
+      { label: "Toasted sesame oil", amount: "0.5 tsp" },
+    ],
+    steps: [
+      "OVEN: Conventional 325°F / Convection 300°F. Line a baking sheet with parchment paper. Cashews are the most burn-prone nut in this collection — lower and slower is the rule.",
+      "PRE-COAT: In a bowl, toss raw cashews with maple syrup and salt until fully coated. The maple syrup will look thin at first — keep tossing for a full minute until every cashew is glossy and coated. Spread in a single even layer on the parchment. No overlapping or they'll steam instead of roast.",
+      "ROAST: Conventional 14–16 min / Convection 11–13 min, stirring every 5 min — cashews need more frequent stirring than other nuts because they brown unevenly. You're looking for an even light-to-medium golden color with a concentrated maple-caramel smell. Pull them the moment they hit golden — they continue cooking briefly on the hot pan.",
+      "COOL: Remove from oven and let cool COMPLETELY on the pan — 20 min minimum. This step is especially important for cashews: they must be fully cool and dry before the melanger. Any residual steam or moisture will cause the butter to seize temporarily when grinding starts. Scrape all caramelized maple crumbles off the parchment — keep every bit.",
+      "MELANGER LOAD: Add all cooled cashews and crumbles to the melanger drum. Cashews break down faster than almonds — expect a rough butter to form within 20–30 min. Scrape sides and under the drum edge every 10 min during this phase.",
+      "ADD FLAVOR: Once the butter is fluid and circulating freely, add vanilla extract, cinnamon, and toasted sesame oil. The sesame oil adds a subtle background nuttiness that you won't be able to identify on its own — it just makes the whole butter taste richer. Run for a further 1–2 hours to your desired smoothness. Taste at 45 min and adjust.",
+      "JAR: Pour warm butter into jars. Cashew butter stays relatively fluid even when cool — it won't firm up as much as almond butter. Maple flavor deepens and intensifies after 24 hours in the jar. Seal and store.",
+    ],
+    notes: "PRE-COAT METHOD: Maple syrup is tossed on raw cashews before roasting, which evaporates the water content and caramelizes the sugars directly into the nut. This prevents the butter from seizing during grinding — a common problem when liquid sweeteners are added after. The toasted sesame oil is a subtle professional trick: you won't taste sesame, but it adds a deeper nuttiness. Maple flavor blooms after 24 hours — it gets noticeably better the next day. Shelf life 1 month room temp, 3 months refrigerated.",
+    batches: [],
+  },
+  {
+    name: "Chocolate espresso almond",
+    ingredients: [
+      { label: "Raw almonds", amount: "400 g" },
+      { label: "Cacao powder", amount: "25 g" },
+      { label: "Espresso powder (fine ground)", amount: "1.5 tbsp" },
+      { label: "Medjool dates, pitted", amount: "2 whole" },
+      { label: "Vanilla extract", amount: "1 tsp" },
+      { label: "Cinnamon", amount: "0.5 tsp" },
+      { label: "Sea salt", amount: "2 g" },
+      { label: "Coconut oil", amount: "10 g" },
+    ],
+    steps: [
+      "OVEN: Conventional 325°F / Convection 300°F. Line a baking sheet with parchment paper. Almonds roast at a lower temp — patience here pays off in flavor.",
+      "ROAST ALMONDS: Spread raw almonds in a single even layer on the parchment. Roast plain (no pre-coat for this recipe — the chocolate and espresso are the flavor drivers): Conventional 14–16 min / Convection 11–13 min, stirring once halfway. You want a deep golden-brown almond with a rich, nutty smell. Let cool COMPLETELY on the pan — 15–20 min.",
+      "PREP DATES: While almonds cool, pit the Medjool dates if not already done and tear each one into 3–4 small pieces. Dates are your sweetener here — they add a natural caramel depth without the seizing risk of liquid sweeteners in a melanger. Set aside.",
+      "MELANGER LOAD: Add cooled almonds to the melanger drum. Run for 30–45 min until a rough almond butter forms and circulates freely under the stones. Scrape sides and under the drum edge every 10–15 min. Almonds are dense — take your time with this phase.",
+      "ADD CHOCOLATE & ESPRESSO: Once the butter is fluid and circulating, add cacao powder, espresso powder, cinnamon, and salt. These are dry ingredients and will incorporate quickly. Run for 15 min. The butter will turn deep brown-black and the aroma will be intense — rich chocolate and coffee.",
+      "ADD DATES, VANILLA & OIL: Add the torn date pieces, vanilla extract, and coconut oil. The dates will break down gradually over the next grinding period — this is normal. Run for a further 1.5–2.5 hours until completely smooth. The dates fully dissolve into the butter, leaving no chunks, just sweetness and depth. Taste at 1 hour and adjust salt or cacao to your preference.",
+      "JAR: Pour warm butter into jars. This butter will be noticeably thicker than the others due to the cacao powder — that's expected. Espresso flavor blooms after chilling; it gets significantly more intense the next day. Seal and refrigerate.",
+    ],
+    notes: "SWEETENER CHOICE: Uses Medjool dates instead of honey — dates provide natural caramel sweetness and complex depth without any risk of seizing in the melanger (liquid sweeteners can briefly cause issues). Use finely ground espresso powder, not instant coffee or coarse grounds — fine powder blends smoothly without grittiness. The cinnamon is a background note used by top artisan versions; you won't taste it as cinnamon, it just deepens the chocolate. Espresso flavor intensifies significantly after 24 hours refrigerated. Shelf life 3 months refrigerated.",
+    batches: [],
+  },
+];
+
+let recipes = JSON.parse(JSON.stringify(defaultRecipes)); // deep copy
+let currentIdx = 0;
+let batchMultiplier = 1;
+
+function buildTabs() {
+  const bar = document.getElementById('tabBar');
+  // Remove all tabs (not the add button)
+  bar.querySelectorAll('.tab').forEach(t => t.remove());
+  const addBtn = bar.querySelector('.tab-add');
+  recipes.forEach((r, i) => {
+    const t = document.createElement('button');
+    t.className = 'tab' + (i === currentIdx ? ' active' : '');
+    t.textContent = r.name;
+    t.onclick = () => switchRecipe(i);
+    bar.insertBefore(t, addBtn);
+  });
+}
+
+function switchRecipe(idx) {
+  currentIdx = idx;
+  batchMultiplier = 1;
+  document.getElementById('batchSlider').value = 1;
+  renderCard();
+  buildTabs();
+}
+
+function renderCard() {
+  const r = recipes[currentIdx];
+  document.getElementById('cardTitle').textContent = r.name;
+  document.getElementById('batchVal').textContent = batchMultiplier;
+  updateBatchNote();
+
+  // Ingredients
+  const grid = document.getElementById('ingredientsGrid');
+  grid.innerHTML = '';
+  r.ingredients.forEach((ing, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'ingredient-cell';
+    const rawAmount = ing.amount;
+    const scaledAmount = scaleAmount(rawAmount, batchMultiplier);
+    cell.innerHTML = `
+      <label>${ing.label || 'Ingredient name'}</label>
+      <input type="text" value="${scaledAmount}" placeholder="Amount"
+        data-base="${rawAmount}"
+        onchange="updateIngredient(${i}, 'amount', this.value)"
+        onfocus="this.select()">
+    `;
+    grid.appendChild(cell);
+  });
+
+  // Steps
+  const stepsList = document.getElementById('stepsList');
+  stepsList.innerHTML = '';
+  r.steps.forEach((step, i) => {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+    row.innerHTML = `
+      <div class="step-num">${i + 1}</div>
+      <textarea class="step-input" onchange="updateStep(${i}, this.value)">${step}</textarea>
+    `;
+    stepsList.appendChild(row);
+  });
+
+  document.getElementById('notesArea').value = r.notes;
+  renderBatchLog();
+}
+
+function scaleAmount(raw, mult) {
+  if (!raw || mult === 1) return raw;
+  // Try to scale numeric values
+  const match = raw.match(/^([\d.]+)\s*(.*)$/);
+  if (match) {
+    const num = parseFloat(match[1]);
+    const unit = match[2];
+    const scaled = (num * mult);
+    const display = scaled % 1 === 0 ? scaled : parseFloat(scaled.toFixed(1));
+    return `${display} ${unit}`.trim();
+  }
+  return raw;
+}
+
+function updateBatch(val) {
+  batchMultiplier = parseInt(val);
+  document.getElementById('batchVal').textContent = val;
+  updateBatchNote();
+  // Re-render ingredient amounts
+  const r = recipes[currentIdx];
+  const inputs = document.getElementById('ingredientsGrid').querySelectorAll('input');
+  inputs.forEach((inp, i) => {
+    const base = r.ingredients[i]?.amount || '';
+    inp.value = scaleAmount(base, batchMultiplier);
+  });
+}
+
+function updateBatchNote() {
+  const note = document.getElementById('batchNote');
+  if (batchMultiplier === 1) note.textContent = 'single batch (~12 oz)';
+  else note.textContent = `${batchMultiplier}× batch (~${12 * batchMultiplier} oz)`;
+}
+
+function updateIngredient(i, field, val) {
+  recipes[currentIdx].ingredients[i][field] = val;
+}
+function updateStep(i, val) {
+  recipes[currentIdx].steps[i] = val;
+}
+
+function addBatchEntry() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (!recipes[currentIdx].batches) recipes[currentIdx].batches = [];
+  recipes[currentIdx].batches.unshift({
+    id: Date.now(),
+    date: today,
+    batchSize: batchMultiplier,
+    grindTime: '',
+    roastTemp: '',
+    rating: 0,
+    flavorNotes: '',
+    changes: '',
+    texture: '',
+    expanded: true,
+  });
+  renderBatchLog();
+}
+
+function deleteBatchEntry(id) {
+  recipes[currentIdx].batches = recipes[currentIdx].batches.filter(b => b.id !== id);
+  renderBatchLog();
+}
+
+function toggleBatchEntry(id) {
+  const b = recipes[currentIdx].batches.find(b => b.id === id);
+  if (b) b.expanded = !b.expanded;
+  renderBatchLog();
+}
+
+function updateBatchField(id, field, val) {
+  const b = recipes[currentIdx].batches.find(b => b.id === id);
+  if (b) b[field] = field === 'batchSize' || field === 'rating' ? Number(val) : val;
+}
+
+function setRating(id, val) {
+  updateBatchField(id, 'rating', val);
+  renderBatchLog();
+}
+
+function renderBatchLog() {
+  const list = document.getElementById('batchLogList');
+  list.innerHTML = '';
+  const batches = recipes[currentIdx].batches || [];
+
+  if (batches.length === 0) {
+    list.innerHTML = '<div class="batch-log-empty">No batches logged yet — hit "+ log batch" to record your first run.</div>';
+    return;
+  }
+
+  batches.forEach((b, idx) => {
+    const entry = document.createElement('div');
+    entry.className = 'batch-entry' + (b.expanded ? ' expanded' : '');
+
+    const stars = [1,2,3,4,5].map(n =>
+      `<span class="${n <= b.rating ? 'lit' : ''}" onclick="setRating(${b.id}, ${n})" title="${n} star${n>1?'s':''}">${n <= b.rating ? '★' : '☆'}</span>`
+    ).join('');
+
+    const sizeLabel = b.batchSize > 1 ? `${b.batchSize}× batch` : 'single batch';
+
+    entry.innerHTML = `
+      <div class="batch-entry-header" onclick="toggleBatchEntry(${b.id})">
+        <div class="batch-entry-num">B-${String(batches.length - idx).padStart(2,'0')}</div>
+        <input type="date" class="batch-entry-date" style="background:transparent;border:none;outline:none;font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text);cursor:pointer;padding:0;"
+          value="${b.date}" onclick="event.stopPropagation()"
+          onchange="updateBatchField(${b.id},'date',this.value)">
+        <div class="batch-entry-size">${sizeLabel}</div>
+        <div class="batch-entry-rating"><div class="star-input">${stars}</div></div>
+        <div class="batch-entry-chevron">▼</div>
+      </div>
+      <div class="batch-entry-body">
+        <div class="batch-fields-row">
+          <div class="batch-field">
+            <label>Batch Size</label>
+            <select onchange="updateBatchField(${b.id},'batchSize',this.value); renderBatchLog()">
+              ${[1,2,3,4,5,6,7,8,9,10].map(n =>
+                `<option value="${n}" ${b.batchSize===n?'selected':''}>${n}× (~${12*n} oz)</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="batch-field">
+            <label>Grind Time</label>
+            <input type="text" placeholder="e.g. 2h 30m" value="${b.grindTime}"
+              onchange="updateBatchField(${b.id},'grindTime',this.value)">
+          </div>
+          <div class="batch-field">
+            <label>Roast Temp Used</label>
+            <input type="text" placeholder="e.g. 325°F conv." value="${b.roastTemp}"
+              onchange="updateBatchField(${b.id},'roastTemp',this.value)">
+          </div>
+        </div>
+        <div class="batch-field-full">
+          <label>Flavor Notes</label>
+          <textarea placeholder="How did it taste? Sweetness level, nuttiness, balance, aftertaste…" onchange="updateBatchField(${b.id},'flavorNotes',this.value)">${b.flavorNotes}</textarea>
+        </div>
+        <div class="batch-field-full">
+          <label>Changes Made</label>
+          <textarea placeholder="What did you adjust from the base recipe? (e.g. +5g honey, reduced roast by 2 min, added pinch of cardamom…)" onchange="updateBatchField(${b.id},'changes',this.value)">${b.changes}</textarea>
+        </div>
+        <div class="batch-field-full">
+          <label>Texture &amp; Consistency</label>
+          <textarea placeholder="Smooth / slightly grainy / very runny / thick / ideal spreadability…" onchange="updateBatchField(${b.id},'texture',this.value)">${b.texture}</textarea>
+        </div>
+        <div class="batch-entry-actions">
+          <button class="btn-delete-entry" onclick="if(confirm('Delete this batch log entry?')) deleteBatchEntry(${b.id})">Delete entry</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(entry);
+  });
+}
+
+
+function addStep() {
+  recipes[currentIdx].steps.push('');
+  renderCard();
+}
+
+function addRecipe() {
+  const name = prompt('Recipe name:');
+  if (!name) return;
+  recipes.push({
+    name,
+    ingredients: [
+      { label: "", amount: "" },
+      { label: "", amount: "" },
+      { label: "", amount: "" },
+      { label: "", amount: "" },
+    ],
+    steps: [""],
+    notes: "",
+    batches: [],
+  });
+  currentIdx = recipes.length - 1;
+  batchMultiplier = 1;
+  buildTabs();
+  renderCard();
+}
+
+function resetToDefaults() {
+  if (!confirm('Reset this recipe to its defaults?')) return;
+  const def = defaultRecipes[currentIdx];
+  if (!def) return;
+  recipes[currentIdx] = JSON.parse(JSON.stringify(def));
+  batchMultiplier = 1;
+  document.getElementById('batchSlider').value = 1;
+  renderCard();
+}
+
+
+// ── Cloud Sync via JSONbin.io ────────────────────────────────────────────────
+// JSONbin stores your data in the cloud for free. The BIN_ID and API_KEY below
+// are pre-configured — you don't need to do anything.
+const LS_KEY   = 'alpineNutButter_v3';
+const BIN_ID   = localStorage.getItem('anb_bin_id') || '';
+const API_KEY  = localStorage.getItem('anb_api_key') || '';
+let   syncTimer = null;
+
+function showStatus(msg, cls, persist = false) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'sync-status visible ' + cls;
+  clearTimeout(el._t);
+  if (!persist) el._t = setTimeout(() => el.classList.remove('visible'), 2500);
+}
+
+// ── localStorage (instant local backup) ─────────────────────────────────────
+function saveLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify({ recipes, currentIdx })); } catch(e) {}
+}
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (data.recipes && Array.isArray(data.recipes)) {
+      recipes = data.recipes; currentIdx = data.currentIdx || 0; return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// ── JSONbin cloud save/load ──────────────────────────────────────────────────
+async function cloudSave() {
+  const binId  = localStorage.getItem('anb_bin_id');
+  const apiKey = localStorage.getItem('anb_api_key');
+  if (!binId || !apiKey) return;
+  try {
+    await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': apiKey, 'X-Bin-Versioning': 'false' },
+      body: JSON.stringify({ recipes, currentIdx }),
+    });
+    showStatus('● synced', 'ok');
+  } catch(e) {
+    showStatus('● sync failed — saved locally', 'err');
+  }
+}
+
+async function cloudLoad() {
+  const binId  = localStorage.getItem('anb_bin_id');
+  const apiKey = localStorage.getItem('anb_api_key');
+  if (!binId || !apiKey) return false;
+  try {
+    showStatus('● loading…', 'syncing', true);
+    const res  = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': apiKey }
+    });
+    if (!res.ok) return false;
+    const json = await res.json();
+    const data = json.record;
+    if (data.recipes && Array.isArray(data.recipes)) {
+      recipes = data.recipes; currentIdx = data.currentIdx || 0;
+      saveLocal();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// ── Main save (local immediately, cloud debounced) ───────────────────────────
+function saveToStorage() {
+  saveLocal();
+  showStatus('● saved', 'ok');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    showStatus('● syncing…', 'syncing', true);
+    cloudSave();
+  }, 1500);
+}
+
+// ── Setup modal ──────────────────────────────────────────────────────────────
+function openSetupModal() {
+  document.getElementById('setupModal').classList.add('open');
+}
+function closeSetupModal() {
+  document.getElementById('setupModal').classList.remove('open');
+}
+
+async function connectBin() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) { alert('Please paste your API key first.'); return; }
+
+  showStatus('● connecting…', 'syncing', true);
+  document.getElementById('connectBtn').textContent = 'Connecting…';
+
+  try {
+    // Create a new bin with current data
+    const res = await fetch('https://api.jsonbin.io/v3/b', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'Alpine Nut Butter Recipes', 'X-Bin-Private': 'true' },
+      body: JSON.stringify({ recipes, currentIdx }),
+    });
+    if (!res.ok) { throw new Error('Bad key'); }
+    const data = await res.json();
+    localStorage.setItem('anb_api_key', key);
+    localStorage.setItem('anb_bin_id', data.metadata.id);
+    closeSetupModal();
+    showStatus('● cloud sync active', 'ok');
+  } catch(e) {
+    document.getElementById('connectBtn').textContent = 'Connect';
+    alert('Couldn\'t connect — double-check your API key and try again.');
+    showStatus('', '');
+  }
+}
+
+async function connectExisting() {
+  const key   = document.getElementById('apiKeyInput').value.trim();
+  const binId = document.getElementById('binIdInput').value.trim();
+  if (!key || !binId) { alert('Please fill in both fields.'); return; }
+  localStorage.setItem('anb_api_key', key);
+  localStorage.setItem('anb_bin_id', binId);
+  const loaded = await cloudLoad();
+  if (loaded) {
+    buildTabs(); renderCard();
+    closeSetupModal();
+    showStatus('● loaded from cloud', 'ok');
+  } else {
+    alert('Couldn\'t load — check your API key and Bin ID.');
+  }
+}
+
+// ── Export / Import (backup) ─────────────────────────────────────────────────
+function exportData() {
+  const payload = JSON.stringify({ recipes, currentIdx }, null, 2);
+  const blob = new Blob([payload], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `alpine_nut_butter_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.recipes || !Array.isArray(data.recipes)) { alert('Invalid file.'); return; }
+      if (!confirm(`Load data from "${file.name}"? This replaces your current data.`)) return;
+      recipes = data.recipes; currentIdx = data.currentIdx || 0;
+      saveToStorage(); buildTabs(); renderCard();
+      alert('Data loaded!');
+    } catch(e) { alert('Couldn\'t read that file.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ── Autosave wrapper ─────────────────────────────────────────────────────────
+function autosave(fn) {
+  return function(...args) { const r = fn(...args); saveToStorage(); return r; };
+}
+updateIngredient = autosave(updateIngredient);
+updateStep       = autosave(updateStep);
+addStep          = autosave(addStep);
+addRecipe        = autosave(addRecipe);
+addBatchEntry    = autosave(addBatchEntry);
+deleteBatchEntry = autosave(deleteBatchEntry);
+toggleBatchEntry = autosave(toggleBatchEntry);
+updateBatchField = autosave(updateBatchField);
+setRating        = autosave(setRating);
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // Always load local first (instant)
+  loadLocal();
+
+  document.getElementById('notesArea').addEventListener('change', e => {
+    recipes[currentIdx].notes = e.target.value;
+    saveToStorage();
+  });
+
+  buildTabs();
+  renderCard();
+
+  // Header status + setup button
+  const hdr = document.querySelector('.site-header');
+  const setupBtn = document.createElement('button');
+  setupBtn.className = 'btn-gdrive-setup';
+  setupBtn.textContent = '☁ Cloud sync';
+  setupBtn.style.marginLeft = 'auto';
+  setupBtn.onclick = openSetupModal;
+  hdr.appendChild(setupBtn);
+
+  const statusEl = document.createElement('span');
+  statusEl.id = 'syncStatus';
+  statusEl.className = 'sync-status';
+  statusEl.style.marginLeft = '10px';
+  hdr.appendChild(statusEl);
+
+  // If cloud is configured, load latest from cloud
+  const hasBin = localStorage.getItem('anb_bin_id');
+  if (hasBin) {
+    const loaded = await cloudLoad();
+    if (loaded) { buildTabs(); renderCard(); showStatus('● synced', 'ok'); }
+  } else {
+    // First time — show setup after a moment
+    setTimeout(openSetupModal, 800);
+  }
+});
+
+
+
+
+</script>
+<!-- Cloud Sync Setup Modal -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal">
+    <h2>Set Up Cloud Sync</h2>
+    <p class="modal-sub">Your data will sync automatically across every device. Takes about 2 minutes — just create a free account at JSONbin.io (no credit card needed).</p>
+
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-text">Go to <a onclick="window.open('https://jsonbin.io','_blank')">jsonbin.io</a> and click <strong>Sign Up Free</strong>. You can sign up with your Google account.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">2</div>
+      <div class="setup-step-text">Once signed in, click your profile icon (top right) → <strong>API Keys</strong>. Click <strong>+ Create Access Key</strong>, name it anything, and click <strong>Create</strong>.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">3</div>
+      <div class="setup-step-text">Copy the key that appears and paste it below, then click <strong>Connect</strong>. That's it — your data will sync automatically from now on.</div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <label style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:6px;">API Key</label>
+      <div class="modal-input-row" style="margin-top:0;">
+        <input type="text" id="apiKeyInput" placeholder="Paste your JSONbin API key…">
+        <button class="btn-connect" id="connectBtn" onclick="connectBin()">Connect</button>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Already set up on another device? Enter both fields to load your existing data:</p>
+      <label style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:6px;">Bin ID (from first device)</label>
+      <input type="text" id="binIdInput" placeholder="e.g. 6642a1e…" style="width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--text);outline:none;margin-bottom:10px;">
+      <button class="btn-ghost" onclick="connectExisting()" style="width:100%;padding:10px;">Load existing data</button>
+    </div>
+
+    <span class="modal-skip" onclick="closeSetupModal()">Skip — use this device only</span>
+  </div>
+</div>
+
+</body>
+</html>
